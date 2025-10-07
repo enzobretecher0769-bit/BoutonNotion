@@ -4,37 +4,46 @@
 <meta charset="UTF-8">
 <title>Bouton Notion</title>
 <style>
+  /* Import d'une police Google Fonts (facultatif) */
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+
   body {
     background: transparent;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100px;
+    height: 120px;
+    margin: 0;
   }
+
   .btn {
-    background-color: #84592B; /* Marron Clair */
-    color: white;
+    background-color: #84592B; /* Fond */
+    color: #E8D1A7;              /* Couleur du texte */
     padding: 15px 30px;
     border: none;
     border-radius: 12px;
-    font-size: 18px;
+    font-size: 20px;
+    font-family: 'Poppins', sans-serif; /* 👈 Police personnalisée */
     cursor: pointer;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    transition: transform 0.2s, background 0.2s;
+    transition: transform 0.2s, background 0.2s, color 0.2s;
   }
+
   .btn:hover {
-    background-color: #E8D1A7;
-    color: #743014;
+    background-color: #E8D1A7; /* Fond au survol */
+    color: #743014;              /* Texte au survol */
     transform: scale(1.05);
   }
 </style>
 </head>
 <body>
   <button class="btn" onclick="window.open('https://www.notion.so/Histoire-285cc698416580fb9ee3ee0a8c680185')">
-    📕 Histoire
+    🛖 Histoire
   </button>
 </body>
 </html>
+
+
 
 
 
