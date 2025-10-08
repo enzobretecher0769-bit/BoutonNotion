@@ -6,15 +6,29 @@
 <style>
   body {
     margin: 0;
-    background-color: #9D9167;
-    color: white;
+    background: transparent;
     font-family: 'Poppins', sans-serif;
-    padding: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+
+  /* Conteneur principal avec coins arrondis */
+  .container {
+    background-color: #743014;
+    border-radius: 20px; /* 👈 Coins arrondis */
+    padding: 20px;
+    width: 220px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.25);
   }
 
   h2 {
     font-size: 22px;
+    margin-top: 0;
     margin-bottom: 15px;
+    color: white;
+    text-align: center;
   }
 
   .link {
@@ -22,7 +36,7 @@
     padding: 8px 10px;
     margin: 5px 0;
     background-color: rgba(255,255,255,0.1);
-    border-radius: 6px;
+    border-radius: 10px;
     color: white;
     text-decoration: none;
     transition: background 0.3s;
@@ -34,33 +48,12 @@
 </style>
 </head>
 <body>
-  <h2>📚 Accès rapide</h2>
-  <div id="menu">
-    <a href="https://www.notion.so/France-xxxxxx" class="link" data-name="France" target="_blank">🇫🇷 France</a>
-    <a href="https://www.notion.so/Italie-yyyyyy" class="link" data-name="Italie" target="_blank">🇮🇹 Italie</a>
-    <a href="https://www.notion.so/Japon-zzzzzz" class="link" data-name="Japon" target="_blank">🇯🇵 Japon</a>
+  <div class="container">
+    <h2>📚 Accès rapide</h2>
+    <a href="https://www.notion.so/France-xxxxxx" class="link" target="_blank">🇫🇷 France</a>
+    <a href="https://www.notion.so/Italie-yyyyyy" class="link" target="_blank">🇮🇹 Italie</a>
+    <a href="https://www.notion.so/Japon-zzzzzz" class="link" target="_blank">🇯🇵 Japon</a>
   </div>
-
-  <script>
-    const menu = document.getElementById('menu');
-    const links = Array.from(menu.querySelectorAll('.link'));
-
-    // Charger la dernière page cliquée
-    const lastVisited = localStorage.getItem('lastVisited');
-    if (lastVisited) {
-      const clicked = links.find(link => link.dataset.name === lastVisited);
-      if (clicked) {
-        menu.prepend(clicked); // Met la dernière visitée en haut
-      }
-    }
-
-    // Sauvegarder la dernière page cliquée
-    links.forEach(link => {
-      link.addEventListener('click', () => {
-        localStorage.setItem('lastVisited', link.dataset.name);
-      });
-    });
-  </script>
 </body>
 </html>
 
