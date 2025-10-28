@@ -64,7 +64,7 @@
       ul.innerHTML = '';
       data.forEach(item => {
         const li = document.createElement('li');
-        li.innerHTML = `${item.nom}<span>Modifié le ${item.date}</span>`;
+        li.innerHTML = `${item.contenu}<span>Modifié le ${item.date}</span>`;
         ul.appendChild(li);
       });
     }
@@ -73,3 +73,4 @@
   </script>
 </body>
 </html>
+
