@@ -35,4 +35,41 @@
 
   li {
     background-color: #5A3723;
-    border-
+    border-radius: 10px;
+    padding: 8px;
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+
+  li span {
+    display: block;
+    font-size: 12px;
+    opacity: 0.8;
+  }
+</style>
+</head>
+<body>
+  <div class="historique">
+    <h2>🕓 Historique</h2>
+    <ul id="historique-list">
+      <li>Chargement...</li>
+    </ul>
+  </div>
+
+  <script>
+    async function chargerHistorique() {
+      const res = await fetch('/api/notion');
+      const data = await res.json();
+      const ul = document.getElementById('historique-list');
+      ul.innerHTML = '';
+      data.forEach(item => {
+        const li = document.createElement('li');
+        li.innerHTML = `${item.nom}<span>Modifié le ${item.date}</span>`;
+        ul.appendChild(li);
+      });
+    }
+
+    chargerHistorique();
+  </script>
+</body>
+</html>
