@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Historique des modifications</title>
+<style>
+  body {
+    background-color: #482E1D;
+    font-family: "Poppins", sans-serif;
+    color: #D7BDA6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+
+  .historique {
+    background-color: #3C2416;
+    border-radius: 20px;
+    padding: 20px;
+    width: 280px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  h2 {
+    text-align: center;
+    color: #D7BDA6;
+    margin-bottom: 15px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    background-color: #5A3723;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  li span {
+    display: block;
+    font-size: 12px;
+    opacity: 0.8;
+  }
+</style>
+</head>
+<body>
+  <div class="historique">
+    <h2>🕓 Historique</h2>
+    <ul id="historique-list">
+      <li>Chargement...</li>
+    </ul>
+  </div>
+
+  <script>
+    async function chargerHistorique() {
+      const res = await fetch('/api/notion');
+      const data = await res.json();
+      const ul = document.getElementById('historique-list');
+      ul.innerHTML = '';
+      data.forEach(item => {
+        const li = document.createElement('li');
+        li.innerHTML = `${item.nom}<span>Modifié le ${item.date}</span>`;
+        ul.appendChild(li);
+      });
+    }
+
+    chargerHistorique();
+  </script>
+</body>
+</html>
