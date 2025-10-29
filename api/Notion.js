@@ -1,4 +1,3 @@
-
 export default async function handler(req, res) {
   const databaseId = process.env.NOTION_DATABASE_ID;
 
@@ -47,3 +46,4 @@ export default async function handler(req, res) {
 
   res.status(200).json(items);
 }
+
