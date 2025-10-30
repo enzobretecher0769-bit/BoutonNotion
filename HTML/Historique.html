@@ -55,10 +55,25 @@
     color: #D7BDA6;
   }
 
+  .page-btn strong {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+
   .page-btn span {
     display: block;
     font-size: 12px;
     opacity: 0.8;
+    margin-bottom: 6px;
+  }
+
+  .page-btn .contenu-preview {
+    font-size: 13px;
+    opacity: 0.9;
+    white-space: pre-wrap; /* garde les retours à la ligne */
+    max-height: 80px;
+    overflow: hidden;
   }
 </style>
 </head>
@@ -73,30 +88,30 @@
   <script>
     async function chargerHistorique() {
       try {
-        // ⚠️ Remplace ce lien par TON lien Vercel :
         const res = await fetch('https://bouton-notion.vercel.app/api/Notion');
         const pages = await res.json();
-
-        // Trier du plus récent au plus ancien et garder 5 derniers
-        pages.sort((a, b) => new Date(b.date) - new Date(a.date));
-        const recent = pages.slice(0, 5);
 
         const ul = document.getElementById("historique-list");
         ul.innerHTML = "";
 
-        recent.forEach(page => {
+        pages.forEach(page => {
           const li = document.createElement("li");
+
           const btn = document.createElement("button");
           btn.className = "page-btn";
-          // ✅ Ouvre dans un nouvel onglet pour être compatible widget Notion
-          btn.onclick = () => window.open(page.url, '_blank');
+          btn.onclick = () => window.open(page.url, "_blank"); // ouvre dans un nouvel onglet
 
-          // Bloc entier cliquable avec titre + date
-          btn.innerHTML = `<strong>${page.titre}</strong><span>Dernière modification : ${page.date}</span>`;
+          // Crée l'intérieur du bouton avec titre, date et aperçu contenu
+          btn.innerHTML = `
+            <strong>${page.titre}</strong>
+            <span>Dernière modification : ${page.date}</span>
+            <div class="contenu-preview">${page.contenu || '[Aucun contenu]'}</div>
+          `;
 
           li.appendChild(btn);
           ul.appendChild(li);
         });
+
       } catch (err) {
         console.error(err);
         document.getElementById("historique-list").innerHTML = "<li>Erreur de chargement</li>";
