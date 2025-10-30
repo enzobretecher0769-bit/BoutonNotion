@@ -67,7 +67,8 @@ export default async function handler(req, res) {
   items.sort((a, b) => new Date(b.last_edited_raw) - new Date(a.last_edited_raw));
 
   // Garde les 5 derniers
-  const recent = items.slice(0, 5);
+  const recent = items.slice(0, 10);
 
   res.status(200).json(recent);
 }
+
