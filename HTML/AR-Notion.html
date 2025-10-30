@@ -15,10 +15,9 @@
     height: 100%;
   }
 
-  /* Conteneur principal avec coins arrondis */
   .container {
     background-color: #482E1D;
-    border-radius: 20px; /* Coins arrondis */
+    border-radius: 20px;
     padding: 20px;
     width: 350px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.25);
@@ -34,26 +33,27 @@
 
   .link {
     display: block;
-    padding: 8px 10px;
-    margin: 5px 0;
-    background-color: rgba(255,255,255,0.1);
+    padding: 12px 10px;
+    margin: 8px 0;
+    background-color: rgba(72, 46, 29, 0.3);
     border-radius: 10px;
-    color: white;
+    color: #D7BDA6;
     text-decoration: none;
+    font-size: 16px;
     transition: background 0.3s;
   }
 
   .link:hover {
-    background-color: #6D3914;
+    background-color: #743014;
   }
 </style>
 </head>
 <body>
-  <div class="acces-rapide">
+  <div class="container">
     <h2>📚 Accès rapide</h2>
-    <ul id="acces-list">
-      <li>Chargement...</li>
-    </ul>
+    <div id="acces-list">
+      Chargement...
+    </div>
   </div>
 
   <script>
@@ -62,29 +62,27 @@
         const res = await fetch('https://bouton-notion.vercel.app/api/Notion-AR.js');
         const pages = await res.json();
 
-        const ul = document.getElementById("acces-list");
-        ul.innerHTML = "";
+        const container = document.getElementById("acces-list");
+        container.innerHTML = "";
 
         if (pages.length === 0) {
-          ul.innerHTML = "<li>Aucune page trouvée</li>";
+          container.innerHTML = "<p>Aucune page trouvée</p>";
           return;
         }
 
         pages.forEach(page => {
-          const li = document.createElement("li");
+          const a = document.createElement("a");
+          a.className = "link";
+          a.href = page.url;
+          a.target = "_blank";
+          a.textContent = page.titre;
 
-          const btn = document.createElement("button")
-          btn.className = "page-btn";
-          btn.onclick = () => window.open(page.url, "_blank");
-          btn.innerHTML = `<strong>${page.titre}</strong>`;
-
-          li.appendChild(btn);
-          ul.appendChild(li);
+          container.appendChild(a);
         });
 
       } catch (err) {
         console.error(err);
-        document.getElementById("acces-list").innerHTML = "<li>Erreur de chargement</li>";
+        document.getElementById("acces-list").innerHTML = "<p>Erreur de chargement</p>";
       }
     }
 
@@ -92,4 +90,3 @@
   </script>
 </body>
 </html>
-
