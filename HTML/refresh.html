@@ -36,9 +36,10 @@
 </style>
 </head>
 <body>
-  <button class="btn-refresh" onclick="rafraichir()">
-    Rafraîchir
-  </button>
+  <button onclick="fetch('https://bouton-notion.vercel.app/api/refresh', {method: 'POST'})">
+  Rafraîchir
+</button>
+
 
   <script>
     function rafraichir() {
@@ -50,4 +51,5 @@
   </script>
 </body>
 </html>
+
 
