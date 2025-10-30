@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Créer une page</title>
+<style>
+  body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: transparent;
+    color: #D7BDA6;
+  }
+
+  .container {
+    max-width: 350px;
+    margin: 0 auto;
+    padding: 15px;
+    border-radius: 20px;
+    background-color: #482E1D;
+    text-align: center;
+  }
+
+  button {
+    background-color: rgba(72, 46, 29, 0.3);
+    color: #D7BDA6;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  button:hover {
+    background-color: #743014;
+  }
+
+  /* Modale */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.6);
+  }
+
+  .modal-content {
+    background-color: #482E1D;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 350px;
+    color: #D7BDA6;
+    text-align: center;
+  }
+
+  .modal-content input {
+    width: 80%;
+    padding: 8px;
+    border: none;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .close {
+    color: #D7BDA6;
+    float: right;
+    font-size: 22px;
+    cursor: pointer;
+  }
+
+  .close:hover {
+    color: #fff;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h2>➕ Créer une nouvelle page</h2>
+    <button id="openModal">Créer une page</button>
+  </div>
+
+  <!-- Fenêtre modale -->
+  <div id="pageModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h3>Nouvelle page</h3>
+      <input type="text" id="pageName" placeholder="Nom de la page">
+      <input type="text" id="pageEmoji" placeholder="Emoji (ex: 📖)">
+      <br>
+      <button id="createBtn">Créer</button>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById("pageModal");
+    const openModal = document.getElementById("openModal");
+    const closeModal = document.querySelector(".close");
+    const createBtn = document.getElementById("createBtn");
+
+    openModal.onclick = () => modal.style.display = "block";
+    closeModal.onclick = () => modal.style.display = "none";
+    window.onclick = (e) => { if (e.target === modal) modal.style.display = "none"; };
+
+    createBtn.onclick = async () => {
+      const name = document.getElementById("pageName").value.trim();
+      const emoji = document.getElementById("pageEmoji").value.trim() || "📄";
+
+      if (!name) {
+        alert("Merci d’indiquer un nom de page !");
+        return;
+      }
+
+      try {
+        const res = await fetch("https://bouton-notion.vercel.app/api/createPage", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, emoji })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          alert("✅ Page créée avec succès !");
+          modal.style.display = "none";
+          document.getElementById("pageName").value = "";
+          document.getElementById("pageEmoji").value = "";
+        } else {
+          alert("❌ Erreur : " + data.error);
+        }
+      } catch (err) {
+        alert("⚠️ Impossible de créer la page : " + err.message);
+      }
+    };
+  </script>
+</body>
+</html>
