@@ -1,32 +1,20 @@
-// /api/refresh.js
+let shouldRefresh = false;
 
-let refreshRequested = false;
-
-/**
- * Ce point d’entrée gère deux méthodes :
- * - POST : déclenche un signal de rafraîchissement
- * - GET : indique si un rafraîchissement a été demandé
- */
-export default function handler(req, res) {
-  // Autorise toutes les origines (utile pour les widgets Notion)
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
-  // Gère les requêtes OPTIONS (prévol CORS)
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
-
+export default async function handler(req, res) {
+  // Quand on clique sur le bouton de rafraîchissement
   if (req.method === "POST") {
-    refreshRequested = true;
-    return res.status(200).json({ message: "🔁 Signal de rafraîchissement envoyé" });
+    shouldRefresh = true; // On active le signal
+    return res.status(200).json({ message: "Rafraîchissement demandé" });
   }
 
+  // Quand un widget (comme Historique) vérifie s’il doit se rafraîchir
   if (req.method === "GET") {
-    const shouldRefresh = refreshRequested;
-    refreshRequested = false; // Réinitialise après lecture
-    return res.status(200).json({ refresh: shouldRefresh });
+    if (shouldRefresh) {
+      shouldRefresh = false; // ✅ On réinitialise pour ne rafraîchir qu'une fois
+      return res.status(200).json({ refresh: true });
+    } else {
+      return res.status(200).json({ refresh: false });
+    }
   }
 
   return res.status(405).json({ error: "Méthode non autorisée" });
