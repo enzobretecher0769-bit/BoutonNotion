@@ -9,7 +9,7 @@
     margin: 0;
     padding: 0;
     font-family: "Poppins", sans-serif;
-    background: transparent; /* pour s'intégrer dans Notion */
+    background: transparent; /* pour s’intégrer dans Notion */
   }
 
   .historique {
@@ -73,6 +73,7 @@
   <script>
     async function chargerHistorique() {
       try {
+        // ⚠️ Remplace ce lien par TON lien Vercel :
         const res = await fetch('https://bouton-notion.vercel.app/api/Notion');
         const pages = await res.json();
 
@@ -87,8 +88,12 @@
           const li = document.createElement("li");
           const btn = document.createElement("button");
           btn.className = "page-btn";
+          // ✅ Ouvre dans un nouvel onglet pour être compatible widget Notion
           btn.onclick = () => window.open(page.url, '_blank');
+
+          // Bloc entier cliquable avec titre + date
           btn.innerHTML = `<strong>${page.titre}</strong><span>Dernière modification : ${page.date}</span>`;
+
           li.appendChild(btn);
           ul.appendChild(li);
         });
@@ -102,4 +107,3 @@
   </script>
 </body>
 </html>
-
