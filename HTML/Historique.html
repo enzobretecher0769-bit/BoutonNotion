@@ -119,14 +119,13 @@
       }
     }
 
-    chargerHistorique();
-
-    // ✅ On écoute le message envoyé depuis le bouton séparé
-    window.addEventListener("message", (event) => {
-      if (event.data === "refresh-historique") {
-        chargerHistorique();
-      }
-    });
+setInterval(async () => {
+  const res = await fetch('https://bouton-notion.vercel.app/api/refresh');
+  const data = await res.json();
+  if (data.refresh) {
+    window.location.reload();
+  }
+}, 10000);
   </script>
 </body>
 </html>
