@@ -9,13 +9,13 @@
     margin: 0;
     padding: 0;
     font-family: "Poppins", sans-serif;
-    background: transparent; /* Fond transparent pour s’intégrer dans Notion */
+    background: transparent; /* pour s'intégrer dans Notion */
   }
 
   .historique {
     border-radius: 20px;
     padding: 15px;
-    color: #D7BDA6; /* Couleur du texte assortie */
+    color: #D7BDA6;
     max-width: 350px;
   }
 
@@ -32,28 +32,33 @@
   }
 
   li {
-    background-color: rgba(72, 46, 29, 0.3); /* Fond doux et semi-transparent */
-    border-radius: 10px;
-    padding: 8px;
-    margin-bottom: 8px;
-    font-size: 14px;
-    word-wrap: break-word;
+    margin-bottom: 10px;
   }
 
-  li span {
+  .page-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background-color: rgba(72, 46, 29, 0.3);
+    color: #D7BDA6;
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    word-wrap: break-word;
+    transition: all 0.2s;
+  }
+
+  .page-btn:hover {
+    background-color: #743014;
+    color: #D7BDA6;
+  }
+
+  .page-btn span {
     display: block;
     font-size: 12px;
     opacity: 0.8;
-  }
-
-  a {
-    color: #D7BDA6;
-    text-decoration: none;
-    font-weight: bold;
-  }
-
-  a:hover {
-    text-decoration: underline;
   }
 </style>
 </head>
@@ -68,13 +73,11 @@
   <script>
     async function chargerHistorique() {
       try {
-        const res = await fetch('https://bouton-notion.vercel.app/api/Notion'); // Ton lien Vercel
+        const res = await fetch('https://bouton-notion.vercel.app/api/Notion');
         const pages = await res.json();
 
-        // Trier par date (du plus récent au plus ancien)
+        // Trier du plus récent au plus ancien et garder 5 derniers
         pages.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-        // Ne garder que les 5 plus récentes
         const recent = pages.slice(0, 5);
 
         const ul = document.getElementById("historique-list");
@@ -82,11 +85,11 @@
 
         recent.forEach(page => {
           const li = document.createElement("li");
-          li.innerHTML = `
-            <a href="${page.url}" target="_blank">${page.titre}</a>
-            <span>Dernière modification : ${page.date}</span>
-            <span>${page.contenu}</span>
-          `;
+          const btn = document.createElement("button");
+          btn.className = "page-btn";
+          btn.onclick = () => window.location.href = page.url;
+          btn.innerHTML = `<strong>${page.titre}</strong><span>Dernière modification : ${page.date}</span>`;
+          li.appendChild(btn);
           ul.appendChild(li);
         });
       } catch (err) {
