@@ -46,11 +46,14 @@
 </head>
 <body>
   <h1>🕓 Dernières pages Notion modifiées</h1>
-  <ul id="notionList"></ul>
+  <ul id="notionList">
+    <li>Chargement...</li>
+  </ul>
 
   <script>
     async function chargerPages() {
-      const res = await fetch("/api/Notion");
+      // ⚠️ Remplace ce lien par TON lien Vercel :
+      const res = await fetch('https://bouton-notion.vercel.app/api/Notion');
       const pages = await res.json();
 
       const list = document.getElementById("notionList");
