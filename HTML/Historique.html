@@ -5,11 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Historique</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+
   body {
     margin: 0;
     padding: 0;
     font-family: "Poppins", sans-serif;
-    background: transparent; /* pour s’intégrer dans Notion */
+    background: transparent;
   }
 
   .historique {
@@ -47,7 +49,6 @@
     padding: 10px;
     cursor: pointer;
     font-size: 14px;
-    word-wrap: break-word;
     transition: all 0.2s;
   }
 
@@ -72,7 +73,7 @@
   .page-btn .contenu-preview {
     font-size: 13px;
     opacity: 0.9;
-    white-space: pre-wrap; /* garde les retours à la ligne */
+    white-space: pre-wrap;
     max-height: 80px;
     overflow: hidden;
   }
@@ -88,21 +89,25 @@
 
   <script>
     async function chargerHistorique() {
+      const ul = document.getElementById("historique-list");
+      ul.innerHTML = "<li>Chargement...</li>";
+
       try {
         const res = await fetch('https://bouton-notion.vercel.app/api/Notion');
         const pages = await res.json();
 
-        const ul = document.getElementById("historique-list");
-        ul.innerHTML = "";
+        if (!pages || pages.length === 0) {
+          ul.innerHTML = "<li>Aucune donnée trouvée</li>";
+          return;
+        }
 
+        ul.innerHTML = "";
         pages.forEach(page => {
           const li = document.createElement("li");
-
           const btn = document.createElement("button");
           btn.className = "page-btn";
-          btn.onclick = () => window.open(page.url, "_blank"); // ouvre dans un nouvel onglet
+          btn.onclick = () => window.open(page.url, "_blank");
 
-          // Crée l'intérieur du bouton avec titre, date et aperçu contenu
           btn.innerHTML = `
             <strong>${page.titre}</strong>
             <span>Dernière modification : ${page.date}</span>
@@ -114,27 +119,27 @@
         });
 
       } catch (err) {
-        console.error(err);
-        document.getElementById("historique-list").innerHTML = "<li>Erreur de chargement</li>";
+        console.error("Erreur Historique:", err);
+        ul.innerHTML = "<li>Erreur de chargement des données</li>";
       }
     }
 
-setInterval(async () => {
-  const res = await fetch('https://bouton-notion.vercel.app/api/refresh');
-  const data = await res.json();
-  if (data.refresh) {
-    window.location.reload();
-  }
-}, 10000);
+    // 🔄 Chargement initial
+    chargerHistorique();
+
+    // 🕒 Vérifie toutes les 10 secondes si un refresh est demandé
+    setInterval(async () => {
+      try {
+        const res = await fetch('https://bouton-notion.vercel.app/api/refresh');
+        const data = await res.json();
+        if (data.refresh) {
+          console.log("🔄 Rafraîchissement demandé !");
+          chargerHistorique(); // recharge seulement le contenu, sans reload la page
+        }
+      } catch (err) {
+        console.warn("Erreur refresh:", err);
+      }
+    }, 10000);
   </script>
 </body>
 </html>
-  </script>
-</body>
-</html>
-
-
-
-
-
-
