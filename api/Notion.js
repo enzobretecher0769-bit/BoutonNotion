@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  const databaseId = "29acc698416580ffa5dff6de6855a522"; // ton ID de base Notion
+  const databaseId = "29bcc69841658056875ed508e02036ad"; // ton ID de base Notion
   const notionToken = process.env.NOTION_TOKEN;
 
   try {
@@ -70,3 +70,4 @@ export default async function handler(req, res) {
     res.status(500).json({ error: error.message });
   }
 }
+
