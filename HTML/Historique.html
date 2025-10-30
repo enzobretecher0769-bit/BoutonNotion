@@ -87,7 +87,7 @@
           const li = document.createElement("li");
           const btn = document.createElement("button");
           btn.className = "page-btn";
-          btn.onclick = () => window.location.href = page.url;
+          btn.onclick = () => window.open(page.url, '_blank');
           btn.innerHTML = `<strong>${page.titre}</strong><span>Dernière modification : ${page.date}</span>`;
           li.appendChild(btn);
           ul.appendChild(li);
@@ -102,3 +102,4 @@
   </script>
 </body>
 </html>
+
