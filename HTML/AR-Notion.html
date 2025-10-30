@@ -17,6 +17,7 @@
     padding: 15px;
     color: #D7BDA6;
     max-width: 350px;
+    background-color: #482E1D; /* fond de la box */
   }
 
   h2 {
@@ -59,15 +60,6 @@
     display: block;
     font-size: 16px;
   }
-  .acces-rapide {
-  border-radius: 20px;
-  padding: 15px;
-  color: #D7BDA6;
-  max-width: 350px;
-
-  /* 🌟 Ajout du fond */
-  background-color: #482E1D;
-}
 </style>
 </head>
 <body>
@@ -95,7 +87,7 @@
         pages.forEach(page => {
           const li = document.createElement("li");
 
-          const btn = document.createElement("button");
+          const btn = document.createElement("button")
           btn.className = "page-btn";
           btn.onclick = () => window.open(page.url, "_blank");
           btn.innerHTML = `<strong>${page.titre}</strong>`;
@@ -114,7 +106,3 @@
   </script>
 </body>
 </html>
-
-
-
-
