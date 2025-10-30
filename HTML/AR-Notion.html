@@ -2,82 +2,117 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Accès rapide - Base Histoire</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Accès rapide</title>
 <style>
   body {
     margin: 0;
-    background: transparent;
-    font-family: 'Poppins', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+    background: transparent; /* pour s’intégrer dans Notion */
   }
 
-  .container {
-    background-color: #482E1D;
+  .acces-rapide {
     border-radius: 20px;
-    padding: 20px;
-    width: 350px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+    padding: 15px;
+    color: #D7BDA6;
+    max-width: 350px;
   }
 
   h2 {
-    font-size: 22px;
-    margin-top: 0;
-    margin-bottom: 15px;
-    color: #D7BDA6;
+    margin: 0 0 10px 0;
+    font-size: 16px;
     text-align: center;
   }
 
-  .link {
-    display: block;
-    padding: 8px 10px;
-    margin: 5px 0;
-    background-color: rgba(255,255,255,0.1);
-    border-radius: 10px;
-    color: white;
-    text-decoration: none;
-    transition: background 0.3s;
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
   }
 
-  .link:hover {
-    background-color: #6D3914;
+  li {
+    margin-bottom: 10px;
+  }
+
+  .page-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background-color: rgba(72, 46, 29, 0.3);
+    color: #D7BDA6;
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    word-wrap: break-word;
+    transition: all 0.2s;
+  }
+
+  .page-btn:hover {
+    background-color: #743014;
+    color: #D7BDA6;
+  }
+
+  .page-btn strong {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+
+  .page-btn span {
+    display: block;
+    font-size: 12px;
+    opacity: 0.8;
   }
 </style>
 </head>
 <body>
-  <div class="container">
+  <div class="acces-rapide">
     <h2>📚 Accès rapide</h2>
-    <div id="links">Chargement...</div>
+    <ul id="acces-list">
+      <li>Chargement...</li>
+    </ul>
   </div>
 
   <script>
-    async function chargerLiens() {
+    async function chargerAccesRapide() {
       try {
-        const res = await fetch('https://bouton-notion.vercel.app/api/Notion');
+        const res = await fetch('https://bouton-notion.vercel.app/api/AccesRapide');
         const pages = await res.json();
 
-        const linksDiv = document.getElementById("links");
-        linksDiv.innerHTML = "";
+        const ul = document.getElementById("acces-list");
+        ul.innerHTML = "";
 
-        // Crée un lien pour chaque page de la base "Base histoire"
+        if (pages.length === 0) {
+          ul.innerHTML = "<li>Aucune page trouvée</li>";
+          return;
+        }
+
         pages.forEach(page => {
-          const a = document.createElement("a");
-          a.href = page.url;
-          a.target = "_blank";
-          a.className = "link";
-          a.textContent = page.titre;
-          linksDiv.appendChild(a);
+          const li = document.createElement("li");
+
+          const btn = document.createElement("button");
+          btn.className = "page-btn";
+          btn.onclick = () => window.open(page.url, "_blank");
+
+          btn.innerHTML = `
+            <strong>${page.titre}</strong>
+            <span>Dernière modification : ${page.date}</span>
+          `;
+
+          li.appendChild(btn);
+          ul.appendChild(li);
         });
 
       } catch (err) {
         console.error(err);
-        document.getElementById("links").innerHTML = "Erreur de chargement";
+        document.getElementById("acces-list").innerHTML = "<li>Erreur de chargement</li>";
       }
     }
 
-    chargerLiens();
+    chargerAccesRapide();
   </script>
 </body>
 </html>
