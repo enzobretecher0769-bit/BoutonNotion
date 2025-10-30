@@ -1,9 +1,9 @@
 export default async function handler(req, res) {
-  const databaseId = "29bcc69841658056875ed508e02036ad"; // ton ID de base Notion
+  const databaseId = "29bcc69841658056875ed508e02036ad"; // ✅ ID base Notion
   const notionToken = process.env.NOTION_TOKEN;
 
   try {
-    // 1️⃣ Récupérer les pages de la base
+    // 1️⃣ Récupérer les pages
     const response = await fetch(`https://api.notion.com/v1/databases/${databaseId}/query`, {
       method: "POST",
       headers: {
@@ -20,54 +20,29 @@ export default async function handler(req, res) {
       throw new Error("Aucun résultat renvoyé par Notion.");
     }
 
-    // 2️⃣ Pour chaque page, récupérer les blocs enfants
-    const items = await Promise.all(
-      data.results.map(async (page) => {
-        const pageId = page.id;
+    // 2️⃣ Transformer et trier les pages
+    let pages = data.results.map((page) => ({
+      id: page.id,
+      titre: page.properties?.Nom?.title?.[0]?.plain_text || "Sans titre",
+      date: new Date(page.last_edited_time),
+      url: page.url,
+    }));
 
-        const resBlocks = await fetch(`https://api.notion.com/v1/blocks/${pageId}/children`, {
-          method: "GET",
-          headers: {
-            "Authorization": `Bearer ${notionToken}`,
-            "Notion-Version": "2022-06-28",
-          },
-        });
+    // 3️⃣ Trier du plus récent au plus ancien
+    pages.sort((a, b) => b.date - a.date);
 
-        const dataBlocks = await resBlocks.json();
+    // 4️⃣ Garder seulement les 5 plus récents
+    pages = pages.slice(0, 5);
 
-        // Sécurisation complète du contenu
-        const contenu = (dataBlocks.results || [])
-          .map(block => {
-            try {
-              const type = block.type;
-              const blockData = block[type];
-              if (!blockData) return "";
+    // 5️⃣ Reformater la date
+    pages = pages.map((p) => ({
+      ...p,
+      date: p.date.toLocaleString("fr-FR"),
+    }));
 
-              const textArray = blockData.rich_text || blockData.text;
-              if (!textArray || !Array.isArray(textArray)) return "";
-
-              return textArray.map(t => t.plain_text).join("");
-            } catch (err) {
-              return ""; // si un bloc est incomplet ou vide
-            }
-          })
-          .filter(Boolean)
-          .join("\n");
-
-        return {
-          pageId,
-          titre: page.properties?.Nom?.title?.[0]?.plain_text || "Sans titre",
-          contenu: contenu || "(Aucun texte trouvé)",
-          date: new Date(page.last_edited_time).toLocaleString("fr-FR"),
-          url: page.url,
-        };
-      })
-    );
-
-    res.status(200).json(items);
+    res.status(200).json(pages);
   } catch (error) {
     console.error("Erreur API:", error);
     res.status(500).json({ error: error.message });
   }
 }
-
