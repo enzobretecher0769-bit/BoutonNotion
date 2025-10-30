@@ -11,9 +11,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 120px;
+    height: 100vh; /* plein écran */
     margin: 0;
     position: relative;
+    font-family: 'Poppins', sans-serif;
   }
 
   .btn {
@@ -23,7 +24,6 @@
     border: none;
     border-radius: 12px;
     font-size: 20px;
-    font-family: 'Poppins', sans-serif;
     cursor: pointer;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     transition: transform 0.2s, background 0.2s, color 0.2s;
@@ -38,32 +38,46 @@
   /* --- Modale --- */
   .modal {
     display: none;
-    position: absolute;
-    z-index: 10;
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    z-index: 10;
   }
 
   .modal-content {
     background-color: #482E1D;
-    padding: 20px;
+    padding: 25px;
     border-radius: 20px;
     width: 90%;
     max-width: 320px;
     color: #E8D1A7;
     text-align: center;
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    animation: fadeIn 0.25s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, -48%); }
+    to { opacity: 1; transform: translate(-50%, -50%); }
+  }
+
+  .modal-content h3 {
+    margin-top: 0;
+    font-size: 18px;
   }
 
   .modal-content input {
-    width: 80%;
+    width: 85%;
     padding: 10px;
     border: none;
     border-radius: 10px;
     margin-bottom: 10px;
     text-align: center;
     font-family: 'Poppins', sans-serif;
+    background-color: #E8D1A7;
+    color: #482E1D;
+    font-size: 14px;
   }
 
   .close {
@@ -138,24 +152,3 @@
         const res = await fetch("https://bouton-notion.vercel.app/api/createPage", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, emoji })
-        });
-
-        const data = await res.json();
-        if (res.ok) {
-          alert("✅ Page créée avec succès !");
-          modal.style.display = "none";
-          openModal.style.display = "inline-block";
-          document.getElementById("pageName").value = "";
-          document.getElementById("pageEmoji").value = "";
-        } else {
-          alert("❌ Erreur : " + data.error);
-        }
-      } catch (err) {
-        alert("⚠️ Impossible de créer la page : " + err.message);
-      }
-    };
-  </script>
-
-</body>
-</html>
