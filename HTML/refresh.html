@@ -48,7 +48,7 @@
 </style>
 </head>
 <body>
-  <button class="btn-refresh" id="refreshBtn">🔄 Rafraîchir</button>
+  <button class="btn-refresh" id="refreshBtn">Rafraîchir</button>
 
   <script>
     const btn = document.getElementById('refreshBtn');
@@ -78,10 +78,11 @@
 
       setTimeout(() => {
         btn.disabled = false;
-        btn.textContent = '🔄 Rafraîchir';
+        btn.textContent = 'Rafraîchir';
         btn.classList.remove('success', 'error');
       }, 2000);
     });
   </script>
 </body>
 </html>
+
