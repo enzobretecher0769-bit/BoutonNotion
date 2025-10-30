@@ -4,39 +4,45 @@
 <meta charset="UTF-8">
 <title>Rafraîchir</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+
   body {
-    margin: 0;
     background: transparent;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
+    margin: 0;
   }
 
-  .refresh-btn {
-    background-color: #E8D1A7;
-    color: #482E1D;
+  .btn-refresh {
+    background-color: #E8D1A7; /* fond clair */
+    color: #743014;            /* texte brun */
+    padding: 15px 30px;
     border: none;
-    border-radius: 10px;
-    padding: 10px 20px;
+    border-radius: 12px;
+    font-size: 20px;
     font-family: 'Poppins', sans-serif;
-    font-size: 15px;
     cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    transition: transform 0.2s, background 0.2s, color 0.2s;
   }
 
-  .refresh-btn:hover {
-    background-color: #D7BDA6;
+  .btn-refresh:hover {
+    background-color: #743014; /* fond inversé */
+    color: #E8D1A7;            /* texte clair */
     transform: scale(1.05);
   }
 </style>
 </head>
 <body>
-  <button class="refresh-btn" onclick="rafraichir()">🔄 Rafraîchir</button>
+  <button class="btn-refresh" onclick="rafraichir()">
+    🔄 Rafraîchir
+  </button>
 
   <script>
     function rafraichir() {
-      // Envoie un message à la page parente (historique)
+      // Envoie un message à la page parente (historique.html)
       if (window.parent) {
         window.parent.postMessage("refresh-historique", "*");
       }
