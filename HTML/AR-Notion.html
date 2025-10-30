@@ -5,32 +5,47 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Accès rapide</title>
 <style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+    background: transparent; /* pour s’intégrer dans Notion */
+  }
+
   .acces-rapide {
     border-radius: 20px;
-    padding: 20px; /* un peu plus d'espace */
+    padding: 15px;
     color: #D7BDA6;
-    max-width: 400px; /* plus large */
-    background-color: rgba(72, 46, 29, 0.6); /* fond semi-transparent */
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2); /* légère ombre */
+    max-width: 350px;
   }
 
   h2 {
-    margin: 0 0 15px 0;
-    font-size: 18px; /* titre un peu plus grand */
+    margin: 0 0 10px 0;
+    font-size: 16px;
     text-align: center;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    margin-bottom: 10px; /* espace entre les boutons */
   }
 
   .page-btn {
     display: block;
     width: 100%;
     text-align: left;
-    background-color: rgba(72, 46, 29, 0.4); /* fond du bouton un peu plus visible */
+    background-color: rgba(72, 46, 29, 0.3);
     color: #D7BDA6;
     border: none;
     border-radius: 10px;
-    padding: 12px; /* boutons plus grands */
+    padding: 12px; /* padding confortable */
     cursor: pointer;
-    font-size: 15px; /* texte plus gros */
+    font-size: 14px;
     word-wrap: break-word;
     transition: all 0.2s;
   }
@@ -42,8 +57,7 @@
 
   .page-btn strong {
     display: block;
-    font-size: 17px; /* titre du bouton plus grand */
-    margin-bottom: 4px;
+    font-size: 16px;
   }
 </style>
 </head>
@@ -91,4 +105,5 @@
   </script>
 </body>
 </html>
+
 
