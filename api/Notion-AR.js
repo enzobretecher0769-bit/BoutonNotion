@@ -72,5 +72,6 @@ export default async function handler(req, res) {
   items.sort((a, b) => new Date(b.date) - new Date(a.date));
 
   // 4️⃣ Retourne toutes les pages (pas seulement 5)
-  res.status(200).json(items);
+  res.status(200).json(items.slice(0, 3));
+
 }
