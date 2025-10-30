@@ -59,7 +59,7 @@
     async function chargerHistorique() {
       try {
         // ⚠️ Remplace ce lien par TON lien Vercel :
-        const res = await fetch('https://bouton-notion.vercel.app/HTML/Historique.html');
+        const res = await fetch('https://bouton-notion.vercel.app/api/Notion.js');
         const data = await res.json();
 
         const ul = document.getElementById('historique-list');
@@ -89,4 +89,5 @@
   </script>
 </body>
 </html>
+
 
