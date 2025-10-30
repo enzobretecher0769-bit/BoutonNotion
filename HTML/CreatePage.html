@@ -152,3 +152,24 @@
         const res = await fetch("https://bouton-notion.vercel.app/api/createPage", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, emoji })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          alert("✅ Page créée avec succès !");
+          modal.style.display = "none";
+          openModal.style.display = "inline-block";
+          document.getElementById("pageName").value = "";
+          document.getElementById("pageEmoji").value = "";
+        } else {
+          alert("❌ Erreur : " + data.error);
+        }
+      } catch (err) {
+        alert("⚠️ Impossible de créer la page : " + err.message);
+      }
+    };
+  </script>
+
+</body>
+</html>
