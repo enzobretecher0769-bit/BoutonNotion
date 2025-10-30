@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  const databaseId = "29bcc69841658056875ed508e02036ad"; // ton ID de base Notion
+  const databaseId = "29acc698416580ffa5dff6de6855a522"; // ton ID de base Notion
   const notionToken = process.env.NOTION_TOKEN;
 
   try {
@@ -35,20 +35,29 @@ export default async function handler(req, res) {
 
         const dataBlocks = await resBlocks.json();
 
-        // Sécurisation du mapping : certains blocs n’ont pas de texte
+        // Sécurisation complète du contenu
         const contenu = (dataBlocks.results || [])
           .map(block => {
-            if (!block[block.type]) return ""; // pas de contenu exploitable
-            const textArray = block[block.type].rich_text || block[block.type].text;
-            if (!textArray || textArray.length === 0) return "";
-            return textArray.map(t => t.plain_text).join("");
+            try {
+              const type = block.type;
+              const blockData = block[type];
+              if (!blockData) return "";
+
+              const textArray = blockData.rich_text || blockData.text;
+              if (!textArray || !Array.isArray(textArray)) return "";
+
+              return textArray.map(t => t.plain_text).join("");
+            } catch (err) {
+              return ""; // si un bloc est incomplet ou vide
+            }
           })
+          .filter(Boolean)
           .join("\n");
 
         return {
           pageId,
           titre: page.properties?.Nom?.title?.[0]?.plain_text || "Sans titre",
-          contenu,
+          contenu: contenu || "(Aucun texte trouvé)",
           date: new Date(page.last_edited_time).toLocaleString("fr-FR"),
           url: page.url,
         };
@@ -61,4 +70,3 @@ export default async function handler(req, res) {
     res.status(500).json({ error: error.message });
   }
 }
-
