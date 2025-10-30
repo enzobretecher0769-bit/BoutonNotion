@@ -60,12 +60,6 @@
     font-size: 16px;
     margin-bottom: 4px;
   }
-
-  .page-btn span {
-    display: block;
-    font-size: 12px;
-    opacity: 0.8;
-  }
 </style>
 </head>
 <body>
@@ -96,11 +90,7 @@
           const btn = document.createElement("button");
           btn.className = "page-btn";
           btn.onclick = () => window.open(page.url, "_blank");
-
-          btn.innerHTML = `
-            <strong>${page.titre}</strong>
-            <span>Dernière modification : ${page.date}</span>
-          `;
+          btn.innerHTML = `<strong>${page.titre}</strong>`;
 
           li.appendChild(btn);
           ul.appendChild(li);
@@ -116,4 +106,3 @@
   </script>
 </body>
 </html>
-
