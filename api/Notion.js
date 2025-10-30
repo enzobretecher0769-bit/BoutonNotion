@@ -1,7 +1,6 @@
 export default async function handler(req, res) {
   const databaseId = process.env.NOTION_DATABASE_ID;
 
-  // 1️⃣ Récupérer toutes les pages de la base
   const response = await fetch(`https://api.notion.com/v1/databases/${databaseId}/query`, {
     method: "POST",
     headers: {
@@ -13,7 +12,6 @@ export default async function handler(req, res) {
 
   const data = await response.json();
 
-  // 2️⃣ Pour chaque page, récupérer le contenu complet
   const items = await Promise.all(
     data.results.map(async (page) => {
       const pageId = page.id;
@@ -28,7 +26,6 @@ export default async function handler(req, res) {
 
       const dataBlocks = await resBlocks.json();
 
-      // Extraire le contenu brut de tous les blocs
       const contenu = dataBlocks.results.map(block => {
         switch(block.type) {
           case "paragraph":
@@ -49,31 +46,27 @@ export default async function handler(req, res) {
           case "code":
             return "`" + (block.code?.text?.map(t => t.plain_text).join('') || '') + "`";
           default:
-            return ""; // Autres types ignorés
+            return "";
         }
       }).join('\n');
 
-      // Récupérer le titre de la page
       const titre = page.properties?.Nom?.title[0]?.plain_text || "Sans titre";
-
-      // Date avec fuseau horaire France
-      const dateFR = new Date(page.last_edited_time)
-        .toLocaleString("fr-FR", { timeZone: "Europe/Paris" });
 
       return {
         pageId,
         titre,
         contenu,
-        date: dateFR,
+        last_edited_raw: page.last_edited_time, // pour tri correct
+        date: new Date(page.last_edited_time).toLocaleString("fr-FR", { timeZone: "Europe/Paris" }),
         url: page.url
       };
     })
   );
 
-  // 3️⃣ Trier les pages par dernière modification (du plus récent au plus ancien)
-  items.sort((a, b) => new Date(b.date) - new Date(a.date));
+  // Trier sur la date brute
+  items.sort((a, b) => new Date(b.last_edited_raw) - new Date(a.last_edited_raw));
 
-  // 4️⃣ Ne garder que les 5 dernières
+  // Garde les 5 derniers
   const recent = items.slice(0, 5);
 
   res.status(200).json(recent);
