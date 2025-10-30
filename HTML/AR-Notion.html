@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Accès rapide - Base Histoire</title>
+<style>
+  body {
+    margin: 0;
+    background: transparent;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+
+  .container {
+    background-color: #482E1D;
+    border-radius: 20px;
+    padding: 20px;
+    width: 350px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+  }
+
+  h2 {
+    font-size: 22px;
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #D7BDA6;
+    text-align: center;
+  }
+
+  .link {
+    display: block;
+    padding: 8px 10px;
+    margin: 5px 0;
+    background-color: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    color: white;
+    text-decoration: none;
+    transition: background 0.3s;
+  }
+
+  .link:hover {
+    background-color: #6D3914;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h2>📚 Accès rapide</h2>
+    <div id="links">Chargement...</div>
+  </div>
+
+  <script>
+    async function chargerLiens() {
+      try {
+        const res = await fetch('https://bouton-notion.vercel.app/api/Notion');
+        const pages = await res.json();
+
+        const linksDiv = document.getElementById("links");
+        linksDiv.innerHTML = "";
+
+        // Crée un lien pour chaque page de la base "Base histoire"
+        pages.forEach(page => {
+          const a = document.createElement("a");
+          a.href = page.url;
+          a.target = "_blank";
+          a.className = "link";
+          a.textContent = page.titre;
+          linksDiv.appendChild(a);
+        });
+
+      } catch (err) {
+        console.error(err);
+        document.getElementById("links").innerHTML = "Erreur de chargement";
+      }
+    }
+
+    chargerLiens();
+  </script>
+</body>
+</html>
