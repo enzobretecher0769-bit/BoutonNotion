@@ -1,93 +1,72 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Historique</title>
-<style>
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: "Poppins", sans-serif;
-    background: transparent; /* Fond transparent pour s’intégrer dans Notion */
-  }
-
-  .historique {
-    border-radius: 20px;
-    padding: 15px;
-    color: #D7BDA6; /* Couleur du texte assortie */
-    max-width: 350px;
-  }
-
-  h2 {
-    margin: 0 0 10px 0;
-    font-size: 16px;
-    text-align: center;
-  }
-
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  li {
-    background-color: rgba(72, 46, 29, 0.3); /* Fond doux et semi-transparent */
-    border-radius: 10px;
-    padding: 8px;
-    margin-bottom: 8px;
-    font-size: 14px;
-    word-wrap: break-word;
-  }
-
-  li span {
-    display: block;
-    font-size: 12px;
-    opacity: 0.8;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Historique des pages Notion</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      max-width: 600px;
+      margin: 20px auto;
+    }
+    li {
+      background: white;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+    li:hover {
+      transform: scale(1.02);
+    }
+    a {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .date {
+      display: block;
+      color: #666;
+      font-size: 0.9em;
+      margin-top: 5px;
+    }
+  </style>
 </head>
 <body>
-  <div class="historique">
-    <h2>🕓 Historique des pages</h2>
-    <ul id="historique-list">
-      <li>Chargement...</li>
-    </ul>
-  </div>
+  <h1>🕓 Dernières pages Notion modifiées</h1>
+  <ul id="notionList"></ul>
 
   <script>
-    async function chargerHistorique() {
-      try {
-        // ⚠️ Remplace ce lien par TON lien Vercel :
-        const res = await fetch('https://bouton-notion.vercel.app/api/Notion.js');
-        const data = await res.json();
+    async function chargerPages() {
+      const res = await fetch("/api/Notion");
+      const pages = await res.json();
 
-        const ul = document.getElementById('historique-list');
-        ul.innerHTML = '';
+      const list = document.getElementById("notionList");
+      list.innerHTML = "";
 
-        if (!data.length) {
-          ul.innerHTML = '<li>Aucune donnée trouvée</li>';
-          return;
-        }
-
-        data.forEach(item => {
-          const li = document.createElement('li');
-          li.innerHTML = `
-            <strong>📄 Page :</strong> ${item.pageId.substring(0, 8)}...<br>
-            <span>🕒 Modifié le ${item.date}</span>
-          `;
-          ul.appendChild(li);
-        });
-      } catch (err) {
-        console.error(err);
-        document.getElementById('historique-list').innerHTML =
-          '<li>Erreur de chargement</li>';
-      }
+      pages.forEach(page => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <a href="${page.url}" target="_blank">${page.titre}</a>
+          <span class="date">Dernière modification : ${page.date}</span>
+        `;
+        list.appendChild(li);
+      });
     }
 
-    chargerHistorique();
+    chargerPages();
   </script>
 </body>
 </html>
-
-
