@@ -9,11 +9,11 @@
     margin: 0;
     padding: 0;
     font-family: "Poppins", sans-serif;
-    background: transparent; /* pour s’intégrer dans Notion */
+    background: transparent;
   }
 
   .acces-rapide {
-    background-color: #482E1D; /* fond marron */
+    background-color: #482E1D;
     border-radius: 20px;
     padding: 15px;
     color: #D7BDA6;
@@ -35,7 +35,7 @@
   }
 
   li {
-    background-color: #894c30; /* même style que historique */
+    background-color: #552b1f;
     border-radius: 10px;
     padding: 10px;
     margin-bottom: 8px;
@@ -70,26 +70,54 @@
   </div>
 
   <script>
+    // --- Stockage local des pages visitées ---
+    function enregistrerVisite(pageId, titre, url) {
+      const historique = JSON.parse(localStorage.getItem("accesRapide") || "[]");
+      const existante = historique.find(p => p.pageId === pageId);
+
+      if (existante) {
+        existante.date = Date.now(); // mise à jour du timestamp
+      } else {
+        historique.push({ pageId, titre, url, date: Date.now() });
+      }
+
+      localStorage.setItem("accesRapide", JSON.stringify(historique));
+    }
+
+    // --- Chargement de la liste depuis ton API ---
     async function chargerAccesRapide() {
       try {
         const res = await fetch('https://bouton-notion.vercel.app/api/Notion-AR.js');
         const pages = await res.json();
 
+        // récupérer les visites stockées
+        const historique = JSON.parse(localStorage.getItem("accesRapide") || "[]");
+
+        // trier : pages les plus récemment ouvertes d'abord
+        const tri = pages.sort((a, b) => {
+          const dateA = historique.find(p => p.pageId === a.pageId)?.date || 0;
+          const dateB = historique.find(p => p.pageId === b.pageId)?.date || 0;
+          return dateB - dateA;
+        });
+
         const ul = document.getElementById("acces-list");
         ul.innerHTML = "";
 
-        if (pages.length === 0) {
+        if (tri.length === 0) {
           ul.innerHTML = "<li>Aucune page trouvée</li>";
           return;
         }
 
-        pages.forEach(page => {
+        tri.forEach(page => {
           const li = document.createElement("li");
-
           const btn = document.createElement("button");
           btn.className = "page-btn";
-          btn.onclick = () => window.open(page.url, "_blank");
           btn.textContent = page.titre;
+
+          btn.onclick = () => {
+            enregistrerVisite(page.pageId, page.titre, page.url);
+            window.open(page.url, "_blank");
+          };
 
           li.appendChild(btn);
           ul.appendChild(li);
@@ -97,8 +125,7 @@
 
       } catch (err) {
         console.error(err);
-        document.getElementById("acces-list").innerHTML =
-          "<li>Erreur de chargement</li>";
+        document.getElementById("acces-list").innerHTML = "<li>Erreur de chargement</li>";
       }
     }
 
@@ -106,4 +133,3 @@
   </script>
 </body>
 </html>
-
