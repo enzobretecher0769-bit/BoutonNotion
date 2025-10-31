@@ -27,7 +27,8 @@ export default async function handler(req, res) {
   //  Frontend utilisera la clé 'accesRapide' pour stocker un tableau d'IDs
 
   // 4️⃣ Ne garder que les 5 pages les plus récentes dans la liste finale
-  const recent = items.slice(0, 5);
+  const recent = items.slice(0, 3);
 
   res.status(200).json(recent);
 }
+
