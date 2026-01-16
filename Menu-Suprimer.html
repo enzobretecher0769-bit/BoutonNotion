@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supprimer une page</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: transparent;
+}
+
+/* Bouton principal */
+.delete-btn {
+  background-color: #743014;
+  color: #D7BDA6;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 14px;
+  width: 100%;
+}
+
+/* Overlay */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Fenêtre */
+.modal {
+  background-color: #482E1D;
+  border-radius: 20px;
+  padding: 15px;
+  width: 340px;
+  max-height: 80vh;
+  overflow-y: auto;
+  color: #D7BDA6;
+}
+
+/* Header */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h2 {
+  font-size: 16px;
+  margin: 0;
+}
+
+.close {
+  cursor: pointer;
+  font-size: 18px;
+}
+
+/* Liste */
+ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+li {
+  background-color: #552b1f;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+li:hover {
+  background-color: #743014;
+}
+</style>
+</head>
+
+<body>
+
+<button class="delete-btn" onclick="ouvrirMenu()">
+  🗑️ Supprimer une page
+</button>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Supprimer une page</h2>
+      <span class="close" onclick="fermerMenu()">✕</span>
+    </div>
+
+    <ul id="liste-pages">
+      <li>Chargement...</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+function ouvrirMenu() {
+  document.getElementById("overlay").style.display = "flex";
+  chargerPages();
+}
+
+function fermerMenu() {
+  document.getElementById("overlay").style.display = "none";
+}
+
+async function chargerPages() {
+  const ul = document.getElementById("liste-pages");
+  ul.innerHTML = "<li>Chargement...</li>";
+
+  try {
+    const res = await fetch("https://bouton-notion.vercel.app/api/Notion-AR.js");
+    const pages = await res.json();
+
+    ul.innerHTML = "";
+
+    pages.forEach(page => {
+      const li = document.createElement("li");
+      li.textContent = page.titre;
+
+      li.onclick = () => {
+        if (confirm(`Supprimer "${page.titre}" ?`)) {
+          supprimerPage(page.id_notion);
+        }
+      };
+
+      ul.appendChild(li);
+    });
+
+  } catch (err) {
+    ul.innerHTML = "<li>Erreur de chargement</li>";
+  }
+}
+
+async function supprimerPage(id) {
+  try {
+    await fetch("https://bouton-notion.vercel.app/api/delete-page", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id })
+    });
+
+    alert("Page supprimée");
+    chargerPages();
+
+  } catch (err) {
+    alert("Erreur lors de la suppression");
+  }
+}
+</script>
+
+</body>
+</html>
